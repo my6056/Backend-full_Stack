@@ -1,0 +1,23 @@
+{
+  "name": "Saurabh_Dixit_Mern_Stack",
+  "version": "1.0.0",
+  "description": "Mern_Stack_Project",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Saurabh Dixit",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^6.2.8",
+    "nodemailer": "^6.9.3",
+    "nodemon": "^2.0.15",
+    "otp-generator": "^4.0.1"
+  }
+}
