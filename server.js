@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const morganLog = require('morgan');
 const mongoose = require('mongoose');
-dotenv.config({ path: 'config.env' });
+dotenv.config();
 const PORT = process.env.PORT || 8080;
 const crypto = require('crypto');
 const nodeMailer = require('nodemailer');
