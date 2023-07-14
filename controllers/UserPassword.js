@@ -3,7 +3,7 @@ const otpGenerator = require('otp-generator');
 const { transporter } = require('../configration/nodemailer');
 const bcryptjs = require('bcryptjs');
 
-module.exports.SendOtp = async (req, res) => {
+module.exports.SendOtp = async (req, res ,next) => {
   const { userEmail } = req.body;
   try {
     const userExists = await UserModel.findOne({ userEmail: userEmail });
@@ -38,6 +38,7 @@ module.exports.SendOtp = async (req, res) => {
     // send Otp
     transporter.sendMail(mailOptions, (error) => {
       if (error) {
+        next(error);
         return res.json({
           status: false,
           message: `Error In Sending Otp : ${error.message}`,
@@ -49,6 +50,7 @@ module.exports.SendOtp = async (req, res) => {
       message: 'Otp Send Successfully in your registered email',
     });
   } catch (error) {
+    next(error);
     return res.json({
       status: false,
       message: `Error In Sending Otp : ${error.message}`,
@@ -56,7 +58,7 @@ module.exports.SendOtp = async (req, res) => {
   }
 };
 
-module.exports.VerifyAndUpdatePassword = async (req, res) => {
+module.exports.VerifyAndUpdatePassword = async (req, res ,next) => {
   const { userEmail, passwordOtp, userPassword, confirmPassword } = req.body;
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
@@ -101,6 +103,7 @@ module.exports.VerifyAndUpdatePassword = async (req, res) => {
       message: 'OTP verified and Password changed Successfully !',
     });
   } catch (error) {
+    next(error);
     return res.json({
       status: false,
       message: `Failed to verify OTP and Update password : ${error.message}`,
