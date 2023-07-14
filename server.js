@@ -37,6 +37,12 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use('/', require('./routers'));
+app.use('*',(req,res) => {
+  return res.json({
+    status: false,
+    message: 'This Page Is not Found . Please Click Valid Route',
+  });
+});
 
 // Function to check the database connection status
 const checkDatabaseConnection = () => {
