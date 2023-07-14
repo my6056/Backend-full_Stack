@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const morganLog = require('morgan');
 const mongoose = require('mongoose');
+mongoose.set('strictQuery',false);
 dotenv.config();
 const PORT = process.env.PORT || 8080;
 const crypto = require('crypto');
@@ -44,7 +45,7 @@ const checkDatabaseConnection = () => {
 };
 
 connectDB().then(() => {
- setInterval(checkDatabaseConnection, 5 * 60 * 1000);
+ checkDatabaseConnection();
   app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`);
   });
