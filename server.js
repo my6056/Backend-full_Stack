@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8080;
 const crypto = require('crypto');
 const nodeMailer = require('nodemailer');
 const logger = winston.createLogger({
-  level: 'error',
+  level: 'silly',
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({ filename: 'error.log' }),
@@ -21,7 +21,7 @@ const logger = winston.createLogger({
 });
 
 app.use(
-  morganLog('combined', {
+  morganLog('tiny', {
     stream: {
       write: (message) => {
         logger.info(message.trim());
