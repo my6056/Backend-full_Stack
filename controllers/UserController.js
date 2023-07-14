@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const secretKey = process.env.SECRETE_KEY;
 const { encryptData, decryptData } = require('../configration/data_encryption');
 
-module.exports.CreteAccount = async (req, res) => {
+module.exports.CreteAccount = async (req, res,next) => {
   const { userName, userEmail, userPassword, confirmPassword } = req.body;
   // Regular expression for validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}/;
@@ -58,11 +58,12 @@ module.exports.CreteAccount = async (req, res) => {
       message: 'Account Created Successfully',
     });
   } catch (error) {
+    next(error);
     return res.json({ status: false, message: 'Internal Server Error' });
   }
 };
 
-module.exports.UserLoginJWT = async (req, res) => {
+module.exports.UserLoginJWT = async (req, res,next) => {
   // Extract email and password from request body
   const { userEmail, userPassword } = req.body;
   // Convert email to lowercase for case-insensitive comparison
@@ -111,6 +112,7 @@ module.exports.UserLoginJWT = async (req, res) => {
     });
   } catch (error) {
     // Return a 500 status (Internal Server Error) if an error occurs
+    next(error);
     return res.json({
       status: false,
       message: `Error In Login User Account: ${error.message}`,
@@ -118,7 +120,7 @@ module.exports.UserLoginJWT = async (req, res) => {
   }
 };
 
-module.exports.UpdateUserDetails = async (req, res) => {
+module.exports.UpdateUserDetails = async (req, res ,next) => {
   const { userId } = req.params;
   const updatedData = req.body;
 
@@ -142,6 +144,7 @@ module.exports.UpdateUserDetails = async (req, res) => {
       message: 'User Updated successfully',
     });
   } catch (error) {
+    next(error);
     return res.json({
       status: false,
       message: `Error In Updating User Details : ${error.message}`,
@@ -149,7 +152,7 @@ module.exports.UpdateUserDetails = async (req, res) => {
   }
 };
 
-module.exports.UserAccountDelete = async (req, res) => {
+module.exports.UserAccountDelete = async (req, res ,next) => {
   const { userId } = req.params;
   try {
     const deletedUser = await UserModel.findByIdAndDelete(userId);
@@ -164,6 +167,7 @@ module.exports.UserAccountDelete = async (req, res) => {
       message: 'User Deleted successfully',
     });
   } catch (error) {
+    next(error);
     return res.json({
       status: false,
       message: `Error In Deleting User Account : ${error.message}`,
