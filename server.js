@@ -5,12 +5,32 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const morganLog = require('morgan');
+const winstonLog = require('winston');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery',false);
 dotenv.config();
 const PORT = process.env.PORT || 8080;
 const crypto = require('crypto');
 const nodeMailer = require('nodemailer');
+
+const logger = winstonLog.createLogger({
+  level:"error",
+  transports:[
+    new winstonLog.transports.Console(),
+    new winstonLog.transports.File({filename:'error.log'})
+  ]
+});
+app.use((err,req,res,next)=>{
+  logger.error(err);
+  next(err);
+});
+app.use(morganLog('combined',{
+  stream:{
+    write:(message) =>{
+      logger.info(message.trim());
+    }
+  }
+}));
 app.use(express.json());
 app.use(
   cors({
@@ -28,7 +48,6 @@ app.use((req, res, next) => {
   next();
 });
 app.use(cookieParser());
-app.use(morganLog('tiny'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use('/', require('./routers'));
