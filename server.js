@@ -61,19 +61,19 @@ app.use((err, req, res, next) => {
   logger.error(err.message);
   next();
 });
-// Function to check the database connection status
-const checkDatabaseConnection = () => {
-  const isConnected = mongoose.connection.readyState === 1; // 1 = connected
+// // Function to check the database connection status
+// const checkDatabaseConnection = () => {
+//   const isConnected = mongoose.connection.readyState === 1; // 1 = connected
 
-  if (isConnected) {
-    console.log('Database connection is active');
-  } else {
-    console.log('Database connection is not active');
-  }
-};
+//   if (isConnected) {
+//     console.log('Database connection is active');
+//   } else {
+//     console.log('Database connection is not active');
+//   }
+// };
 
 connectDB().then(() => {
- checkDatabaseConnection();
+//  checkDatabaseConnection();
   app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`);
   });
