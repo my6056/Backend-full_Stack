@@ -5,18 +5,31 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const morganLog = require('morgan');
+const winston = require('winston');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery',false);
 dotenv.config();
 const PORT = process.env.PORT || 8080;
 const crypto = require('crypto');
 const nodeMailer = require('nodemailer');
-app.use((err,req,res,next)=>{
- console.log(err);
- res.send(`Errors : ${err}`);
-  next(err);
+const logger = winston.createLogger({
+  level: 'error',
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'error.log' }),
+  ],
 });
-app.use(morganLog('tiny'));
+
+app.use(
+  morganLog('combined', {
+    stream: {
+      write: (message) => {
+        logger.info(message.trim());
+      },
+    },
+  })
+);
+// app.use(morganLog('tiny'));
 app.use(express.json());
 app.use(
   cors({
@@ -44,7 +57,10 @@ app.use('*',(req,res) => {
     message: 'This Page Is not Found . Please Click Valid Route',
   });
 });
-
+app.use((err, req, res, next) => {
+  logger.error(err.message);
+  next(err);
+});
 // Function to check the database connection status
 const checkDatabaseConnection = () => {
   const isConnected = mongoose.connection.readyState === 1; // 1 = connected
