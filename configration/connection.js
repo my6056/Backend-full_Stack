@@ -9,7 +9,7 @@ const connectDB = async () => {
     });
     const isConntected = await mongoose.connection.readyState === 1; // 1 = connected
     if(isConntected){
-       console.log(`MongoDB Database connected in Successfully and Database connection is active in :  ${con.connection.host}`);
+       console.log(`MongoDB Database is connected Successfully and Database connection is active on :  ${con.connection.host}`);
     }else{
       console.log('Database connection is not active');
     }
