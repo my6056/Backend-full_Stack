@@ -59,7 +59,7 @@ app.use('*',(req,res) => {
 });
 app.use((err, req, res, next) => {
   logger.error(err.message);
-  next(err);
+  next();
 });
 // Function to check the database connection status
 const checkDatabaseConnection = () => {
