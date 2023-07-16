@@ -122,14 +122,31 @@ module.exports.UserLoginJWT = async (req, res,next) => {
 
 module.exports.UpdateUserDetails = async (req, res ,next) => {
   const { userId } = req.params;
-  const updatedData = req.body;
+  // const updatedData = req.body;
+  const { userEmail, userName, userPassword, confirmPassword } = req.body;
+  if (userPassword !== confirmPassword) {
+    return res.json({
+      status: false,
+      message: 'Both Password Should Matched'
+    })
+  }
+  const updatedData = {};
 
+  if (userEmail) {
+    updatedData.userEmail = userEmail;
+  }
+  if (userName) {
+    updatedData.userName = userName;
+  }
+  if (userPassword) {
+    const hashedPassword = await bcryptjs.hash(userPassword, 15);
+    const encryptedPassword = encryptData(hashedPassword);
+    updatedData.userPassword = encryptedPassword;
+  }
+  if (confirmPassword) {
+    updatedData.confirmPassword = confirmPassword;
+  }
   try {
-    if (updatedData.userPassword) {
-      const hashedPassword = await bcryptjs.hash(updatedData.userPassword, 15);
-      const encryptedPassword = encryptData(hashedPassword);
-      updatedData.userPassword = encryptedPassword;
-    }
     const updatedUser = await UserModel.findByIdAndUpdate(userId, updatedData, {
       new: true,
     });
