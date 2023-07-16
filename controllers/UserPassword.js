@@ -179,7 +179,12 @@ const getOtpEmailTemplate = (Otp, userEmail) => {
           }
   
           .otp {
+            font-size: 15px;
+          }
+          .OTP_STYLE{
             font-size: 20px;
+            color: red;
+            border-bottom: 1px solid black;
           }
   
           .info p {
@@ -195,7 +200,7 @@ const getOtpEmailTemplate = (Otp, userEmail) => {
         <div class="logo">
           <h1>User Authentication</h1>
         </div>
-        <div class="otp">Your OTP: ${Otp}</div>
+        <div class="otp">Your OTP: <span class="OTP_STYLE">${Otp}</span></div>
         <div class="info">
           <p>
             We have sent this One-Time Password (OTP) to the email address
