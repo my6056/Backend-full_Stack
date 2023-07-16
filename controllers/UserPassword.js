@@ -15,13 +15,15 @@ module.exports.SendOtp = async (req, res ,next) => {
       });
     }
 
+    // Generate a 6-digit number for passwordOtp
     const Otp = otpGenerator.generate(6, {
       digits: true,
       alphabets: false,
       upperCase: false,
       specialChars: false,
     });
-    userExists.passwordOtp = Otp;
+
+    userExists.passwordOtp = parseInt(Otp); // Convert the OTP to a number
     userExists.passwordOtpExpire = Date.now() + 10 * 60 * 1000; //10min
     await userExists.save();
     // Construct the password reset email
@@ -39,7 +41,6 @@ module.exports.SendOtp = async (req, res ,next) => {
         message: 'Otp Send Successfully in your registered email',
       });
     }).catch((error) => {
-      console.log('OTP NODEMAILER send Error',error);
       next(error);
         return res.json({
           status: false,
@@ -69,13 +70,16 @@ module.exports.VerifyAndUpdatePassword = async (req, res ,next) => {
         message: 'User not Valid',
       });
     }
-    if (
-      user.passwordOtp != passwordOtp &&
-      user.passwordOtpExpire < Date.now()
-    ) {
+    if (user.passwordOtp !== parseInt(passwordOtp)) {
       return res.json({
         status: false,
-        message: 'Otp Is Not Valid Or Otp Expired',
+        message: 'Otp Is Not Valid !',
+      });
+    }
+    if (user.passwordOtpExpire < Date.now()) {
+      return res.json({
+        status: false,
+        message: 'Otp Expired',
       });
     }
     if (!passwordRegex.test(userPassword)) {
