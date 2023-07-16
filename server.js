@@ -54,6 +54,7 @@ app.use((err, req, res, next) => {
 });
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+// for logs downloaad for website aadmin
 app.get('/logs', async (req, res) => {
   try {
     const { token } = req.query;
@@ -77,7 +78,9 @@ app.get('/logs', async (req, res) => {
     });
   }
 });
+// for routes
 app.use('/', require('./routers'));
+// for wrong route handle
 app.use('*',(req,res) => {
   return res.json({
     status: false,
@@ -85,6 +88,7 @@ app.use('*',(req,res) => {
   });
 });
 
+// database and server connection
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`);
