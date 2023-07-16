@@ -1,6 +1,7 @@
 const UserModel = require('../model/UserModel');
 const otpGenerator = require('otp-generator');
 const { transporter } = require('../configration/nodemailer');
+const { encryptData } = require('../configration/data_encryption');
 const bcryptjs = require('bcryptjs');
 
 module.exports.SendOtp = async (req, res ,next) => {
