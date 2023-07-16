@@ -24,31 +24,34 @@ module.exports.SendOtp = async (req, res ,next) => {
     userExists.passwordOtpExpire = Date.now() + 10 * 60 * 1000; //10min
     await userExists.save();
     // Construct the password reset email
+    const registeredEmail = userExists.userEmail;
     const mailOptions = {
       from: process.env.NODEMAILER_FROM_EMAIL,
       to: userExists.userEmail,
       cc: process.env.NODEMAILER_CC_EMAIL,
-      subject: `Password Reset Request`,
-      html: getOtpEmailTemplate(Otp, userEmail),
-      envelope: {
-        from: process.env.NODEMAILER_FROM_EMAIL,
-        to: userExists.userEmail,
-      },
+      subject: `Password Reset OTP Request`,
+      html: getOtpEmailTemplate(Otp, registeredEmail),
     };
-    // send Otp
-    transporter.sendMail(mailOptions, (error) => {
-      if (error) {
-        next(error);
-        return res.json({
-          status: false,
-          message: `Error In Sending Otp : ${error.message}`,
-        });
-      }
-    });
+    const otpSent = await transporter.sendMail(mailOptions);
+    console.log('OTP NODEMAILER',otpSent);
     return res.json({
       status: true,
       message: 'Otp Send Successfully in your registered email',
     });
+    // send Otp
+    // transporter.sendMail(mailOptions, (error) => {
+    //   // if (error) {
+    //   //   next(error);
+    //   //   return res.json({
+    //   //     status: false,
+    //   //     message: `Error In Sending Otp : ${error.message}`,
+    //   //   });
+    //   // }
+    // });
+    // return res.json({
+    //   status: true,
+    //   message: 'Otp Send Successfully in your registered email',
+    // });
   } catch (error) {
     next(error);
     return res.json({
