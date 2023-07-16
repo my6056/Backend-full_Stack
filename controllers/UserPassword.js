@@ -32,12 +32,21 @@ module.exports.SendOtp = async (req, res ,next) => {
       subject: `Password Reset OTP Request`,
       html: getOtpEmailTemplate(Otp, registeredEmail),
     };
-    const otpSent = await transporter.sendMail(mailOptions);
-    console.log('OTP NODEMAILER',otpSent);
-    return res.json({
-      status: true,
-      message: 'Otp Send Successfully in your registered email',
+    await transporter.sendMail(mailOptions).then(() => {
+      console.log('OTP NODEMAILER',otpSent);
+      return res.json({
+        status: true,
+        message: 'Otp Send Successfully in your registered email',
+      });
+    }).catch((error) => {
+      console.log('OTP NODEMAILER send Error',error);
+      next(error);
+        return res.json({
+          status: false,
+          message: `Error In Sending Otp : ${error.message}`,
+        });
     });
+    
     // send Otp
     // transporter.sendMail(mailOptions, (error) => {
     //   // if (error) {
@@ -53,6 +62,7 @@ module.exports.SendOtp = async (req, res ,next) => {
     //   message: 'Otp Send Successfully in your registered email',
     // });
   } catch (error) {
+    console.log('Error in otp sending' ,error);
     next(error);
     return res.json({
       status: false,
