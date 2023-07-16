@@ -33,7 +33,6 @@ module.exports.SendOtp = async (req, res ,next) => {
       html: getOtpEmailTemplate(Otp, registeredEmail),
     };
     await transporter.sendMail(mailOptions).then(() => {
-      console.log('OTP NODEMAILER',otpSent);
       return res.json({
         status: true,
         message: 'Otp Send Successfully in your registered email',
@@ -46,21 +45,7 @@ module.exports.SendOtp = async (req, res ,next) => {
           message: `Error In Sending Otp : ${error.message}`,
         });
     });
-    
-    // send Otp
-    // transporter.sendMail(mailOptions, (error) => {
-    //   // if (error) {
-    //   //   next(error);
-    //   //   return res.json({
-    //   //     status: false,
-    //   //     message: `Error In Sending Otp : ${error.message}`,
-    //   //   });
-    //   // }
-    // });
-    // return res.json({
-    //   status: true,
-    //   message: 'Otp Send Successfully in your registered email',
-    // });
+    return;
   } catch (error) {
     console.log('Error in otp sending' ,error);
     next(error);
