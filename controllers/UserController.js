@@ -124,6 +124,29 @@ module.exports.UpdateUserDetails = async (req, res ,next) => {
   const { userId } = req.params;
   // const updatedData = req.body;
   const { userEmail, userName, userPassword, confirmPassword } = req.body;
+  // Regular expression for validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}/;
+  const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+  if (!emailRegex.test(userEmail)) {
+    return res.json({
+      status: false,
+      message: 'Enter Valid Email Please.',
+    });
+  }
+  if (!userName && !usernameRegex.test(userName)) {
+    return res.json({
+      status: false,
+      message: 'Enter Valid UserName Please.',
+    });
+  }
+  if (!passwordRegex.test(userPassword)) {
+    return res.json({
+      status: false,
+      message: 'Enter Valid Password with special charector and min 6 digit',
+    });
+  }
   if (userPassword !== confirmPassword) {
     return res.json({
       status: false,
