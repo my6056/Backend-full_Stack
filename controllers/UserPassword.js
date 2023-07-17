@@ -23,7 +23,7 @@ module.exports.SendOtp = async (req, res ,next) => {
       specialChars: false,
     });
 
-    userExists.passwordOtp = parseInt(Otp); // Convert the OTP to a number
+    userExists.passwordOtp = Otp; // Convert the OTP to a number
     userExists.passwordOtpExpire = Date.now() + 10 * 60 * 1000; //10min
     await userExists.save();
     // Construct the password reset email
@@ -70,7 +70,7 @@ module.exports.VerifyAndUpdatePassword = async (req, res ,next) => {
         message: 'User not Valid',
       });
     }
-    if (user.passwordOtp !== parseInt(passwordOtp)) {
+    if (user.passwordOtp !== passwordOtp) {
       return res.json({
         status: false,
         message: 'Otp Is Not Valid !',
