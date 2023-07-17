@@ -16,7 +16,7 @@ const UserSchema = new Schema(
       require: true,
     },
     passwordOtp: {
-      type: Number,
+      type: String,
       maxlength: 6,
     },
     passwordOtpExpire: {
